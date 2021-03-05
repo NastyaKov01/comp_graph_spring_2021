@@ -1,8 +1,10 @@
 #ifndef MAIN_PLAYER_H
 #define MAIN_PLAYER_H
 
+
 #include "Image.h"
 #include "drawmap.h"
+
 enum
 {
     Wall = 35, Floor = 46, Woodenfloor = 95, FlamePic = 102, MoonPic = 109,
@@ -36,15 +38,18 @@ struct Player
 
   bool Moved() const;
   void ChangeCoords(int y, int x);
-  void ProcessInput(MovementDir dir, Image &screen, Image &copy, int **tiles, bool &wood, int &m, int &n);
+  void ProcessInput(MovementDir dir, Image &screen, Image &copy, int **tiles, int *treasures, bool &wood, int &m, int &n);
   void Draw(Image &pic, Image &screen, Image &copy);
-  void GetTreasure(Image &screen, Image &copy, int **tiles, bool &wood, int &m, int &n);
+  void GetTreasure(Image &screen, Image &copy, int **tiles, int *treasures, bool &wood, int &m, int &n);
+  void Kill() { dead = true; }
+  bool Killed() { return dead; }
 
 private:
   Point coords {.x = 10, .y = 10};
   Point old_coords {.x = 10, .y = 10};
   Pixel color {.r = 255, .g = 255, .b = 0, .a = 255};
   int move_speed = 4;
+  bool dead = false;
 };
 
 #endif //MAIN_PLAYER_H

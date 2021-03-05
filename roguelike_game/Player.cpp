@@ -16,7 +16,7 @@ void Player::ChangeCoords(int y, int x)
     coords.x = x;
 }
 
-void Player::GetTreasure(Image &screen, Image &copy, int **tiles, bool &wood, int &m, int &n)
+void Player::GetTreasure(Image &screen, Image &copy, int **tiles, int *treasures, bool &wood, int &m, int &n)
 {
     Image floor("./resources/grey.jpg");
     Image woodenfloor("./resources/tex_-95.png");
@@ -29,24 +29,31 @@ void Player::GetTreasure(Image &screen, Image &copy, int **tiles, bool &wood, in
     {
         case Gold:
             found = true;
+            ++treasures[0];
             break; 
         case Goblet:
             found = true;
+            ++treasures[1];
             break;
         case Potion:
             found = true;
+            ++treasures[2];
             break;
         case Jewel:
             found = true;
+            ++treasures[3];
             break;
         case Redring:
             found = true;
+            ++treasures[4];
             break;
         case Star:
             found = true;
+            ++treasures[5];
             break;
         case Crown:
             found = true;
+            ++treasures[6];
             break;
         default:
             break;
@@ -64,7 +71,7 @@ void Player::GetTreasure(Image &screen, Image &copy, int **tiles, bool &wood, in
     }
 }
 
-void Player::ProcessInput(MovementDir dir, Image &screen, Image &copy, int **tiles, bool &wood, int &m, int &n)
+void Player::ProcessInput(MovementDir dir, Image &screen, Image &copy, int **tiles, int *treasures, bool &wood, int &m, int &n)
 {
     int move_dist = move_speed * 1;
     switch(dir)
@@ -195,40 +202,49 @@ void Player::ProcessInput(MovementDir dir, Image &screen, Image &copy, int **til
     default:
         break;
     }
-    Player::GetTreasure(screen, copy, tiles, wood, m, n);
+    Player::GetTreasure(screen, copy, tiles, treasures, wood, m, n);
     int ycentre, xcentre;
     ycentre = windowHeight - coords.y - tileSize/2 - 1;
     xcentre = coords.x + tileSize/2;
     bool found = false;
-    /*std::cout << "coords " << coords.y << " " << coords.x << std::endl;
-    std::cout << (m * windowHeight + ycentre) / tileSize << " " << (n * windowWidth + xcentre) / tileSize << std::endl;
-    std::cout << "---" << tiles[(m * windowHeight + ycentre) / tileSize][(n * windowWidth + xcentre) / tileSize] << std::endl;*/
     switch(tiles[(m * windowHeight + ycentre) / tileSize][(n * windowWidth + xcentre) / tileSize]) 
     {
         case Door:
             if (coords.x + tileSize == 1008) {
                 ++n;
-                //std::cout << "+++n" << std::endl;
                 Player::ChangeCoords(288, 32);
             } else if (coords.x == 12) {
                 --n;
-                //std::cout << "---n" << std::endl;
                 Player::ChangeCoords(288, 960);
             } else if (coords.y == 12) {
                 ++m;
-                //std::cout << "+++m" << std::endl;
                 Player::ChangeCoords(608, 512);
             } else if (coords.y + tileSize == 656) {
                 --m;
-              //  std::cout << "---m" << std::endl;
                 Player::ChangeCoords(32, 512);
             }
-            //std::cout << "m n " << m << " " << n << std::endl; 
             DrawRoom(screen, tiles, wood, m, n);
             copy = screen;
             break;
         case Quit:
-            
+            {
+            Image win("./resources/victory.png");
+            Image wall("./resources/pic_-0.png");
+            DrawTile(win, screen, wall, 192, 240);
+            break;
+            }
+        case Abyss:
+        case Mist0:
+        case Mist1:
+        case Mist2:
+        case Mist3:
+        {
+            Image defeat("./resources/defeat.png");
+            Image wall("./resources/pic_-0.png");
+            DrawTile(defeat, screen, screen, 334, 218);
+            Player::Kill();
+            break;
+        }
         default:
             break;
     }

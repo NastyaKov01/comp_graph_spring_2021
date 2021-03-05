@@ -12,7 +12,7 @@ enum
     Arch3 = 104, Arch4 = 72, Book1 = 98, Book2 = 66, Book3 = 107,
     Book4 = 75, Crown = 67, Temple = 43, Potion = 80,
     Redarch1 = 101, Redarch2 = 69, Redarch3 = 100, Redarch4 = 68,
-    Door = 120, Redring = 114, Star = 42, Quit = 81
+    Door = 120, Redring = 114, Star = 42, Quit = 81, Player = 64
 };
 
 int DrawTile(Image &picture, Image &screen, Image &back, int xstart, int ystart)
@@ -21,7 +21,7 @@ int DrawTile(Image &picture, Image &screen, Image &back, int xstart, int ystart)
         for (int x = 0; x < picture.Width(); ++x) {
             Pixel pix = picture.GetPixel(x, y);
             if (pix.a == 0) {
-                screen.PutPixel(xstart + x, screen.Height() - ystart - y - 1, back.GetPixel(x, y));
+                screen.PutPixel(xstart + x, screen.Height() - ystart - y - 1, back.GetPixel(x % tileSize, y % tileSize));
             } else {
                 screen.PutPixel(xstart + x, screen.Height() - ystart - y - 1, picture.GetPixel(x, y));
             }
@@ -45,6 +45,11 @@ void ReadMap(const std::string &name, int **tiles)
             if (char(ch) != '\n') {
                 switch (ch)
                 {
+                    case 80:
+                    {
+                        file.open("./maps/roomP.txt");
+                        break;  
+                    }
                     case 65:
                     {
                         file.open("./maps/roomA.txt");
@@ -115,23 +120,12 @@ void ReadMap(const std::string &name, int **tiles)
 
 void DrawRoom(Image &screen, int **tiles, bool &wood, int m, int n)
 {
-    /*const char *fname = "./maps/roomF.txt";
-    std::ifstream file(fname);
-    if (!file) {
-        std::cout << "Cannot open the file" << std::endl;
-    } else {
-        int ch;
-        ch = file.get();*/
     int ch;
     int xcur = 0, ycur = 0;
     int i = 0, j = 0;
     Image floor("./resources/grey.jpg");
     Image woodenfloor("./resources/tex_-95.png");
     Image wall("./resources/pic_-0.png");
-       /* while (!file.eof()) {
-            if (char(ch) != '\n') {
-                tiles[i][j] = ch;
-                ++j;*/
     wood = false;
     for (int i = 0; i < windowHeight / tileSize; ++i) {
         for (int j = 0; j < windowWidth / tileSize; ++j) {
@@ -143,6 +137,7 @@ void DrawRoom(Image &screen, int **tiles, bool &wood, int m, int n)
                     xcur += tileSize;
                     break;
                 }
+                case Player:
                 case Floor:
                 {
                     DrawTile(floor, screen, floor, xcur, ycur);

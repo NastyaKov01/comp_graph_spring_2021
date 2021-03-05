@@ -4,9 +4,12 @@
 #include "drawmap.h"
 
 #define GLFW_DLL
+#include <algorithm>
 #include <GLFW/glfw3.h>
 
 constexpr GLsizei WINDOW_WIDTH = 1024, WINDOW_HEIGHT = 672;
+const float death = 3.0;
+float death_timer = 0.0;
 
 struct InputState
 {
@@ -21,6 +24,7 @@ struct InputState
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 int **tiles;
+int *treasures;
 int m = 0;
 int n = 0;
 
@@ -49,13 +53,13 @@ void OnKeyboardPressed(GLFWwindow* window, int key, int scancode, int action, in
 void processPlayerMovement(Player &player, Image &screen, Image &copy, bool &wood)
 {
     if (Input.keys[GLFW_KEY_W])
-        player.ProcessInput(MovementDir::UP, screen, copy, tiles, wood, m, n);
+        player.ProcessInput(MovementDir::UP, screen, copy, tiles, treasures, wood, m, n);
     else if (Input.keys[GLFW_KEY_S])
-        player.ProcessInput(MovementDir::DOWN, screen, copy, tiles, wood, m, n);
+        player.ProcessInput(MovementDir::DOWN, screen, copy, tiles, treasures, wood, m, n);
     if (Input.keys[GLFW_KEY_A])
-        player.ProcessInput(MovementDir::LEFT, screen, copy, tiles, wood, m, n);
+        player.ProcessInput(MovementDir::LEFT, screen, copy, tiles, treasures, wood, m, n);
     else if (Input.keys[GLFW_KEY_D])
-        player.ProcessInput(MovementDir::RIGHT, screen, copy, tiles, wood, m, n);
+        player.ProcessInput(MovementDir::RIGHT, screen, copy, tiles, treasures, wood, m, n);
 }
 
 void OnMouseButtonClicked(GLFWwindow* window, int button, int action, int mods)
@@ -116,16 +120,6 @@ int initGL()
 	return 0;
 }
 
-int drawPicture(Image &picture, Image &screen)
-{
-    for (int y = 0; y < picture.Height(); ++y) {
-        for (int x = 0; x < picture.Width(); ++x) {
-            screen.PutPixel(x,y,picture.GetPixel(x, y));
-        }
-    }
-    return 0;
-}
-
 int main(int argc, char** argv)
 {
 	if(!glfwInit())
@@ -165,22 +159,14 @@ int main(int argc, char** argv)
 	Image screenBuffer(WINDOW_WIDTH, WINDOW_HEIGHT, 4);
     Image playerPic("./resources/player.png");
 
-   // drawPicture(img, screenBuffer);
+    treasures = new int[7];
+    std::fill(treasures, treasures + 7, 0);
     tiles = new int*[mapHeight * WINDOW_HEIGHT/tileSize];
     for (int i = 0; i < mapHeight * WINDOW_HEIGHT/tileSize; ++i) {
         tiles[i] = new int[mapWidth * WINDOW_WIDTH/tileSize];
     }  
     bool wood = false;
     ReadMap("./maps/map.txt", tiles);
-    /*for (int i = 0; i < mapHeight * WINDOW_HEIGHT/tileSize; ++i) {
-        for (int j = 0; j < mapWidth *  WINDOW_WIDTH/tileSize; ++j) {
-            if (j % windowWidth == 0) {
-                std::cout << " ";
-            }
-            std::cout << char(tiles[i][j]);
-        }
-        std::cout << std::endl;
-    }*/
     DrawRoom(screenBuffer, tiles, wood, m , n);
     Image copy(screenBuffer);
 
@@ -198,7 +184,13 @@ int main(int argc, char** argv)
 
         processPlayerMovement(player, screenBuffer, copy, wood);
         player.Draw(playerPic, screenBuffer, copy);
-
+        
+        if (player.Killed()) {
+            death_timer += deltaTime;
+            if (death_timer > death) {
+                return 0;
+            }
+        }
         
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); GL_CHECK_ERRORS;
         glDrawPixels (WINDOW_WIDTH, WINDOW_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, screenBuffer.Data()); GL_CHECK_ERRORS;
@@ -209,6 +201,7 @@ int main(int argc, char** argv)
         delete [] tiles[i];
     }
     delete [] tiles;
+    delete [] treasures;
 	glfwTerminate();
 	return 0;
 }

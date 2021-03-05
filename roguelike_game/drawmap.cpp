@@ -32,10 +32,10 @@ int DrawTile(Image &picture, Image &screen, Image &back, int xstart, int ystart)
 
 void ReadMap(Image &screen, int **tiles, bool &wood)
 {
-    const char *fname = "./room2.txt";
+    const char *fname = "./maps/roomS.txt";
     std::ifstream file(fname);
     if (!file) {
-        std::cout << "Cannot open the file" << wood << std::endl;
+        std::cout << "Cannot open the file" << std::endl;
     } else {
         int ch;
         ch = file.get();

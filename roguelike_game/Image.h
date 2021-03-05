@@ -5,6 +5,9 @@
 
 constexpr int tileSize = 32;
 constexpr int windowHeight = 672;
+constexpr int windowWidth = 1024;
+constexpr int mapHeight = 5;
+constexpr int mapWidth = 4;
 
 struct Pixel
 {
@@ -21,6 +24,7 @@ struct Image
   explicit Image(const std::string &a_path);
   Image(int a_width, int a_height, int a_channels);
   Image(Image &img);
+  Image &operator=(Image &img);
 
   int Save(const std::string &a_path);
 

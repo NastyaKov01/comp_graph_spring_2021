@@ -12,7 +12,7 @@ enum
     Arch3 = 104, Arch4 = 72, Book1 = 98, Book2 = 66, Book3 = 107,
     Book4 = 75, Crown = 67, Necklace = 110, Temple = 43, Potion = 80,
     Redarch1 = 101, Redarch2 = 69, Redarch3 = 100, Redarch4 = 68,
-    Door = 120, Redring = 114, Star = 42
+    Door = 120, Redring = 114, Star = 42, Quit = 81
 };
 
 struct Point
@@ -35,9 +35,10 @@ struct Player
                  coords(pos), old_coords(coords) {};
 
   bool Moved() const;
-  void ProcessInput(MovementDir dir, Image &screen, Image &copy, int **tiles, bool &wood);
+  void ChangeCoords(int y, int x);
+  void ProcessInput(MovementDir dir, Image &screen, Image &copy, int **tiles, bool &wood, int &m, int &n);
   void Draw(Image &pic, Image &screen, Image &copy);
-  void GetTreasure(Image &screen, Image &copy, int **tiles, bool &wood);
+  void GetTreasure(Image &screen, Image &copy, int **tiles, bool &wood, int &m, int &n);
 
 private:
   Point coords {.x = 10, .y = 10};

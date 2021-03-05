@@ -48,6 +48,29 @@ Image::Image(Image &img)
     }
 }
 
+Image &Image::operator=(Image &img)
+{
+    if(self_allocated)
+        delete [] data;
+    else
+    {
+        stbi_image_free(data);
+    }
+    data = new Pixel[img.Width() * img.Height()]{};
+    if (data != nullptr) {
+        width = img.Width();
+        height = img.Height();
+        size = img.Width() * img.Height() * img.Channels();
+        channels = img.Channels();
+        self_allocated = true;
+        Pixel *buf = img.Data();
+        for (int i = 0; i < width * height; ++i) {
+            data[i] = buf[i];
+        }
+    }
+    return *this;
+}
+
 int Image::Save(const std::string &a_path)
 {
   auto extPos = a_path.find_last_of('.');

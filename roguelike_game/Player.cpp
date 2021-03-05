@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include <iostream>
+
 bool Player::Moved() const
 {
     if(coords.x == old_coords.x && coords.y == old_coords.y)
@@ -9,7 +10,13 @@ bool Player::Moved() const
         return true;
 }
 
-void Player::GetTreasure(Image &screen, Image &copy, int **tiles, bool &wood)
+void Player::ChangeCoords(int y, int x)
+{
+    coords.y = y;
+    coords.x = x;
+}
+
+void Player::GetTreasure(Image &screen, Image &copy, int **tiles, bool &wood, int &m, int &n)
 {
     Image floor("./resources/grey.jpg");
     Image woodenfloor("./resources/tex_-95.png");
@@ -17,92 +24,47 @@ void Player::GetTreasure(Image &screen, Image &copy, int **tiles, bool &wood)
     int ycentre, xcentre;
     ycentre = windowHeight - coords.y - tileSize/2 - 1;
     xcentre = coords.x + tileSize/2;
-    switch(tiles[ycentre / tileSize][xcentre / tileSize]) 
+    bool found = false;
+    switch(tiles[(m * windowHeight + ycentre) / tileSize][(n * windowWidth + xcentre) / tileSize]) 
     {
-    case Gold:
+        case Gold:
+            found = true;
+            break; 
+        case Goblet:
+            found = true;
+            break;
+        case Potion:
+            found = true;
+            break;
+        case Jewel:
+            found = true;
+            break;
+        case Redring:
+            found = true;
+            break;
+        case Star:
+            found = true;
+            break;
+        case Crown:
+            found = true;
+            break;
+        default:
+            break;
+    }
+    if (found) {
         if (wood) {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 95;
+            tiles[(m * windowHeight + ycentre) / tileSize][(n * windowWidth + xcentre) / tileSize] = 95;
             DrawTile(woodenfloor, screen, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
             DrawTile(woodenfloor, copy, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
         } else {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 46;
+            tiles[(m * windowHeight + ycentre) / tileSize][(n * windowWidth + xcentre) / tileSize] = 46;
             DrawTile(floor, screen, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
             DrawTile(floor, copy, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
         }
-        break;
-    case Goblet:
-        if (wood) {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 95;
-            DrawTile(woodenfloor, screen, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-            DrawTile(woodenfloor, copy, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-        } else {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 46;
-            DrawTile(floor, screen, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-            DrawTile(floor, copy, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-        }
-        break;
-        break;
-    case Potion:
-        if (wood) {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 95;
-            DrawTile(woodenfloor, screen, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-            DrawTile(woodenfloor, copy, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-        } else {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 46;
-            DrawTile(floor, screen, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-            DrawTile(floor, copy, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-        }
-        break;
-    case Jewel:
-        if (wood) {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 95;
-            DrawTile(woodenfloor, screen, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-            DrawTile(woodenfloor, copy, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-        } else {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 46;
-            DrawTile(floor, screen, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-            DrawTile(floor, copy, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-        }
-        break;
-    case Redring:
-        if (wood) {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 95;
-            DrawTile(woodenfloor, screen, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-            DrawTile(woodenfloor, copy, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-        } else {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 46;
-            DrawTile(floor, screen, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-            DrawTile(floor, copy, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-        }
-        break;
-    case Crown:
-        if (wood) {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 95;
-            DrawTile(woodenfloor, screen, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-            DrawTile(woodenfloor, copy, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-        } else {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 46;
-            DrawTile(floor, screen, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-            DrawTile(floor, copy, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-        }
-        break;
-    case Star:
-        if (wood) {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 95;
-            DrawTile(woodenfloor, screen, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-            DrawTile(woodenfloor, copy, woodenfloor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-        } else {
-            tiles[ycentre / tileSize][xcentre / tileSize] = 46;
-            DrawTile(floor, screen, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-            DrawTile(floor, copy, floor, xcentre / tileSize * tileSize, ycentre / tileSize * tileSize);
-        }
-        break;
-    default:
-        break;
     }
 }
 
-void Player::ProcessInput(MovementDir dir, Image &screen, Image &copy, int **tiles, bool &wood)
+void Player::ProcessInput(MovementDir dir, Image &screen, Image &copy, int **tiles, bool &wood, int &m, int &n)
 {
     int move_dist = move_speed * 1;
     switch(dir)
@@ -134,56 +96,11 @@ void Player::ProcessInput(MovementDir dir, Image &screen, Image &copy, int **til
     default:
         break;
     }
-
-    switch(tiles[(windowHeight-coords.y-1)/tileSize][coords.x/tileSize]) 
-    {
-    case Wall:
-    case FlamePic:
-    case MoonPic:
-    case ShieldPic:
-    case PotionPic:
-    case Candle:
-    case Arch3:
-    case Arch4:
-    case Book1:
-    case Book2:
-    case Book3:
-    case Book4:
-    case Temple:
-    case Redarch3:
-    case Redarch4:
-        coords.y = old_coords.y;
-        coords.x = old_coords.x;
-        break;
-    default:
-        break;
-    }
-
-    switch(tiles[(windowHeight-coords.y-tileSize)/tileSize][(coords.x+tileSize-1)/tileSize])
-    {
-    case Wall:
-    case FlamePic:
-    case MoonPic:
-    case ShieldPic:
-    case PotionPic:
-    case Candle:
-    case Arch3:
-    case Arch4:
-    case Book1:
-    case Book2:
-    case Book3:
-    case Book4:
-    case Temple:
-    case Redarch3:
-    case Redarch4:
-        coords.y = old_coords.y;
-        coords.x = old_coords.x;
-        break;
-    default:
-        break;
-    }
-
-    switch(tiles[(windowHeight-coords.y-tileSize)/tileSize][coords.x/tileSize]) 
+    int ycorner = ((m + 1) * windowHeight - coords.y - 1) / tileSize;
+    int xcorner = (n * windowWidth + coords.x) / tileSize;
+    int yfarcorner = ((m + 1) * windowHeight - coords.y - tileSize) / tileSize;
+    int xfarcorner = (n * windowWidth + coords.x + tileSize - 1) / tileSize;
+    switch(tiles[ycorner][xcorner]) 
     {
     case Wall:
     case FlamePic:
@@ -207,7 +124,7 @@ void Player::ProcessInput(MovementDir dir, Image &screen, Image &copy, int **til
         break;
     }
     
-    switch(tiles[(windowHeight-coords.y-1)/tileSize][(coords.x+tileSize-1)/tileSize]) 
+    switch(tiles[yfarcorner][xfarcorner])
     {
     case Wall:
     case FlamePic:
@@ -230,7 +147,92 @@ void Player::ProcessInput(MovementDir dir, Image &screen, Image &copy, int **til
     default:
         break;
     }
-    Player::GetTreasure(screen, copy, tiles, wood);
+
+    switch(tiles[yfarcorner][xcorner]) 
+    {
+    case Wall:
+    case FlamePic:
+    case MoonPic:
+    case ShieldPic:
+    case PotionPic:
+    case Candle:
+    case Arch3:
+    case Arch4:
+    case Book1:
+    case Book2:
+    case Book3:
+    case Book4:
+    case Temple:
+    case Redarch3:
+    case Redarch4:
+        coords.y = old_coords.y;
+        coords.x = old_coords.x;
+        break;
+    default:
+        break;
+    }
+    
+    switch(tiles[ycorner][xfarcorner]) 
+    {
+    case Wall:
+    case FlamePic:
+    case MoonPic:
+    case ShieldPic:
+    case PotionPic:
+    case Candle:
+    case Arch3:
+    case Arch4:
+    case Book1:
+    case Book2:
+    case Book3:
+    case Book4:
+    case Temple:
+    case Redarch3:
+    case Redarch4:
+        coords.y = old_coords.y;
+        coords.x = old_coords.x;
+        break;
+    default:
+        break;
+    }
+    Player::GetTreasure(screen, copy, tiles, wood, m, n);
+    int ycentre, xcentre;
+    ycentre = windowHeight - coords.y - tileSize/2 - 1;
+    xcentre = coords.x + tileSize/2;
+    bool found = false;
+    /*std::cout << "coords " << coords.y << " " << coords.x << std::endl;
+    std::cout << (m * windowHeight + ycentre) / tileSize << " " << (n * windowWidth + xcentre) / tileSize << std::endl;
+    std::cout << "---" << tiles[(m * windowHeight + ycentre) / tileSize][(n * windowWidth + xcentre) / tileSize] << std::endl;*/
+    switch(tiles[(m * windowHeight + ycentre) / tileSize][(n * windowWidth + xcentre) / tileSize]) 
+    {
+        case Door:
+            if (coords.x + tileSize == 1008) {
+                ++n;
+                //std::cout << "+++n" << std::endl;
+                Player::ChangeCoords(288, 32);
+            } else if (coords.x == 12) {
+                --n;
+                //std::cout << "---n" << std::endl;
+                Player::ChangeCoords(288, 960);
+            } else if (coords.y == 12) {
+                ++m;
+                //std::cout << "+++m" << std::endl;
+                Player::ChangeCoords(608, 512);
+            } else if (coords.y + tileSize == 656) {
+                --m;
+              //  std::cout << "---m" << std::endl;
+                Player::ChangeCoords(32, 512);
+            }
+            //std::cout << "m n " << m << " " << n << std::endl; 
+            DrawRoom(screen, tiles, wood, m, n);
+            copy = screen;
+            break;
+        case Quit:
+            
+        default:
+            break;
+    }
+
 }
 
 void Player::Draw(Image &pic, Image &screen, Image &copy)
@@ -253,15 +255,12 @@ void Player::Draw(Image &pic, Image &screen, Image &copy)
         for(int x = 0; x <= tileSize; ++x)
         {
             Pixel pix = pic.GetPixel(x, y);
-            //std::cout << "a = " << int(pix.a) << " ";
             if (pix.a == 0) {
-                ///std::cout << "***" << std::endl;
                 Pixel back = copy.Data()[copy.Width() * (coords.y + y) + coords.x + x];
                 screen.PutPixel(coords.x + x, coords.y + y, back);
             } else {
                 screen.PutPixel(coords.x + x, coords.y + y, pix);
             }
         }
-       // std::cout << std::endl;
     }
 }

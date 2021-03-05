@@ -21,6 +21,8 @@ struct InputState
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 int **tiles;
+int m = 0;
+int n = 0;
 
 void OnKeyboardPressed(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
@@ -47,13 +49,13 @@ void OnKeyboardPressed(GLFWwindow* window, int key, int scancode, int action, in
 void processPlayerMovement(Player &player, Image &screen, Image &copy, bool &wood)
 {
     if (Input.keys[GLFW_KEY_W])
-        player.ProcessInput(MovementDir::UP, screen, copy, tiles, wood);
+        player.ProcessInput(MovementDir::UP, screen, copy, tiles, wood, m, n);
     else if (Input.keys[GLFW_KEY_S])
-        player.ProcessInput(MovementDir::DOWN, screen, copy, tiles, wood);
+        player.ProcessInput(MovementDir::DOWN, screen, copy, tiles, wood, m, n);
     if (Input.keys[GLFW_KEY_A])
-        player.ProcessInput(MovementDir::LEFT, screen, copy, tiles, wood);
+        player.ProcessInput(MovementDir::LEFT, screen, copy, tiles, wood, m, n);
     else if (Input.keys[GLFW_KEY_D])
-        player.ProcessInput(MovementDir::RIGHT, screen, copy, tiles, wood);
+        player.ProcessInput(MovementDir::RIGHT, screen, copy, tiles, wood, m, n);
 }
 
 void OnMouseButtonClicked(GLFWwindow* window, int button, int action, int mods)
@@ -134,7 +136,7 @@ int main(int argc, char** argv)
 //	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    GLFWwindow*  window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "task1 base project", nullptr, nullptr);
+    GLFWwindow*  window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Castle treasure", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -164,18 +166,22 @@ int main(int argc, char** argv)
     Image playerPic("./resources/player.png");
 
    // drawPicture(img, screenBuffer);
-    tiles = new int*[WINDOW_HEIGHT/tileSize];
-    for (int i = 0; i < WINDOW_HEIGHT/tileSize; ++i) {
-        tiles[i] = new int[WINDOW_WIDTH/tileSize];
+    tiles = new int*[mapHeight * WINDOW_HEIGHT/tileSize];
+    for (int i = 0; i < mapHeight * WINDOW_HEIGHT/tileSize; ++i) {
+        tiles[i] = new int[mapWidth * WINDOW_WIDTH/tileSize];
     }  
     bool wood = false;
-    ReadMap(screenBuffer, tiles, wood);
-    /*for (int i = 0; i < WINDOW_HEIGHT/tileSize; ++i) {
-        for (int j = 0; j < WINDOW_WIDTH/tileSize; ++j) {
-            std::cout << tiles[i][j];
+    ReadMap("./maps/map.txt", tiles);
+    /*for (int i = 0; i < mapHeight * WINDOW_HEIGHT/tileSize; ++i) {
+        for (int j = 0; j < mapWidth *  WINDOW_WIDTH/tileSize; ++j) {
+            if (j % windowWidth == 0) {
+                std::cout << " ";
+            }
+            std::cout << char(tiles[i][j]);
         }
         std::cout << std::endl;
     }*/
+    DrawRoom(screenBuffer, tiles, wood, m , n);
     Image copy(screenBuffer);
 
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);  GL_CHECK_ERRORS;

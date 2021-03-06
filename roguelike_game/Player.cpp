@@ -24,37 +24,69 @@ void Player::GetTreasure(Image &screen, Image &copy, int **tiles, int *treasures
     int ycentre, xcentre;
     ycentre = windowHeight - coords.y - tileSize/2 - 1;
     xcentre = coords.x + tileSize/2;
-    bool found = false;
     switch(tiles[(m * windowHeight + ycentre) / tileSize][(n * windowWidth + xcentre) / tileSize]) 
     {
         case Gold:
+        {
+            Image gold("./resources/coins.png");
             found = true;
             ++treasures[0];
+            DrawTile(gold, screen, wall, 992, 0);
+            PrintNumber(screen, wall, treasures[0]);
             break; 
+        }
         case Goblet:
+        {
+            Image goblet("./resources/goblet.png");
             found = true;
             ++treasures[1];
+            DrawTile(goblet, screen, wall, 992, 0);
+            PrintNumber(screen, wall, treasures[1]);
             break;
+        }
         case Potion:
+        {
+            Image potion("./resources/potion.png");
             found = true;
             ++treasures[2];
+            DrawTile(potion, screen, wall, 992, 0);
+            PrintNumber(screen, wall, treasures[2]);
             break;
+        }
         case Jewel:
+        {
+            Image jewel("./resources/jewels.png");
             found = true;
             ++treasures[3];
+            DrawTile(jewel, screen, wall, 992, 0);
+            PrintNumber(screen, wall, treasures[3]);
             break;
+        }
         case Redring:
+        {
+            Image redring("./resources/redring.png");
             found = true;
             ++treasures[4];
+            DrawTile(redring, screen, wall, 992, 0);
+            PrintNumber(screen, wall, treasures[4]);
             break;
+        }
         case Star:
+        {
+            Image star("./resources/star.png");
             found = true;
             ++treasures[5];
+            DrawTile(star, screen, wall, 992, 0);
+            PrintNumber(screen, wall, treasures[5]);
             break;
+        }
         case Crown:
+        {
             found = true;
             ++treasures[6];
+            PrintNumber(screen, wall, treasures[6]);
             break;
+        }
         default:
             break;
     }
@@ -225,12 +257,17 @@ void Player::ProcessInput(MovementDir dir, Image &screen, Image &copy, int **til
             }
             DrawRoom(screen, tiles, wood, m, n);
             copy = screen;
+            for (int i = 0; i < 7; ++i) {
+                std::cout << treasures[i] << " ";
+            }
+            std::cout << std::endl;
             break;
         case Quit:
             {
             Image win("./resources/victory.png");
             Image wall("./resources/pic_-0.png");
             DrawTile(win, screen, wall, 192, 240);
+            victory = true;
             break;
             }
         case Abyss:

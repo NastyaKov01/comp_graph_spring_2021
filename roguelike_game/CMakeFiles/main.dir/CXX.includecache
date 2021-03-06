@@ -22,6 +22,14 @@ Image.h
 drawmap.h
 /home/anastasia/comp_graph/comp_graph_spring_2021/roguelike_game/drawmap.h
 
+/home/anastasia/comp_graph/comp_graph_spring_2021/roguelike_game/drawmap.cpp
+fstream
+-
+iostream
+-
+drawmap.h
+/home/anastasia/comp_graph/comp_graph_spring_2021/roguelike_game/drawmap.h
+
 /home/anastasia/comp_graph/comp_graph_spring_2021/roguelike_game/drawmap.h
 Image.h
 /home/anastasia/comp_graph/comp_graph_spring_2021/roguelike_game/Image.h

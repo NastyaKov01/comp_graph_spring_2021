@@ -14,7 +14,7 @@ Image::Image(const std::string &a_path)
     {
         size = width * height * channels;
     } else {
-        std::cout << "Can't open the file Image" << std::endl;
+        std::cout << "Can't open the file " << a_path << std::endl;
     }
 }
 

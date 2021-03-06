@@ -8,8 +8,10 @@
 #include <GLFW/glfw3.h>
 
 constexpr GLsizei WINDOW_WIDTH = 1024, WINDOW_HEIGHT = 672;
-const float death = 3.0;
+constexpr float death = 2.0;
 float death_timer = 0.0;
+constexpr float treasure_time = 1.3;
+float treasure_timer = 0.0;
 
 struct InputState
 {
@@ -182,16 +184,28 @@ int main(int argc, char** argv)
 		lastFrame = currentFrame;
         glfwPollEvents();
 
-        processPlayerMovement(player, screenBuffer, copy, wood);
-        player.Draw(playerPic, screenBuffer, copy);
-        
-        if (player.Killed()) {
+        if (player.Killed() || player.Win()) {
             death_timer += deltaTime;
             if (death_timer > death) {
                 return 0;
             }
+        } else {
+            processPlayerMovement(player, screenBuffer, copy, wood);
+            player.Draw(playerPic, screenBuffer, copy);
         }
-        
+       
+        if (player.Found()) {
+            treasure_timer += deltaTime;
+            if (treasure_timer > treasure_time) {
+                Image wall("./resources/pic_-0.png");
+                Image floor("./resources/grey.jpg");
+                DrawTile(wall, screenBuffer, wall, 992, 0);
+                DrawTile(wall, screenBuffer, wall, 992, 32);
+                treasure_timer = 0.0;
+                player.Lose();
+            }
+        }
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); GL_CHECK_ERRORS;
         glDrawPixels (WINDOW_WIDTH, WINDOW_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, screenBuffer.Data()); GL_CHECK_ERRORS;
 

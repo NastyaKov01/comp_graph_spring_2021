@@ -30,6 +30,20 @@ int DrawTile(Image &picture, Image &screen, Image &back, int xstart, int ystart)
     return 0;
 }
 
+void PrintNumber(Image &screen, Image &wall, int n)
+{
+    DrawTile(wall, screen, wall, 992, 32);
+    if (n / 10 == 0) {
+        Image num("./resources/" + std::to_string(n) + ".jpg");
+        DrawTile(num, screen, num, 1000, 40);
+    } else {
+        Image num1("./resources/" + std::to_string(n / 10) + ".jpg");
+        Image num2("./resources/" + std::to_string(n % 10) + ".jpg");
+        DrawTile(num1, screen, wall, 992, 40);
+        DrawTile(num2, screen, wall, 1008, 40);
+    }
+}
+
 void ReadMap(const std::string &name, int **tiles)
 {
     std::ifstream map;

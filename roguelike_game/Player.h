@@ -43,6 +43,10 @@ struct Player
   void GetTreasure(Image &screen, Image &copy, int **tiles, int *treasures, bool &wood, int &m, int &n);
   void Kill() { dead = true; }
   bool Killed() { return dead; }
+  void Find() { found = true; }
+  bool Found() { return found; }
+  void Lose() { found = false; }
+  bool Win() { return victory; }
 
 private:
   Point coords {.x = 10, .y = 10};
@@ -50,6 +54,8 @@ private:
   Pixel color {.r = 255, .g = 255, .b = 0, .a = 255};
   int move_speed = 4;
   bool dead = false;
+  bool found = false;
+  bool victory = false;
 };
 
 #endif //MAIN_PLAYER_H

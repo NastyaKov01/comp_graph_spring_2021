@@ -257,10 +257,6 @@ void Player::ProcessInput(MovementDir dir, Image &screen, Image &copy, int **til
             }
             DrawRoom(screen, tiles, wood, m, n);
             copy = screen;
-            for (int i = 0; i < 7; ++i) {
-                std::cout << treasures[i] << " ";
-            }
-            std::cout << std::endl;
             break;
         case Quit:
             {

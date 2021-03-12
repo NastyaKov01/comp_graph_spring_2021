@@ -1,3 +1,0 @@
-/home/anastasia/comp_graph/comp_graph_spring_2021/roguelike_game/CMakeFiles/rebuild_cache.dir
-/home/anastasia/comp_graph/comp_graph_spring_2021/roguelike_game/CMakeFiles/edit_cache.dir
-/home/anastasia/comp_graph/comp_graph_spring_2021/roguelike_game/CMakeFiles/main.dir
